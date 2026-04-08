@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_session
-from schemas.url import URLCreate, URLInfo
-from services.url_service import URLService
+from app.core.database import get_session
+from app.core.deps import get_url_service
+from app.schemas.url_schema import URLCreate, URLInfo
+from app.services.url_service import URLService
 
 router = APIRouter()
 
@@ -13,7 +14,7 @@ router = APIRouter()
 async def create_short_url(
     data: URLCreate,
     session: AsyncSession = Depends(get_session),
-    service: URLService = Depends(URLService)
+    service: URLService = Depends(get_url_service)
 ):
     url_obj = await service.create_short_url(session, data.url)
     return URLInfo(short_id=url_obj.short_id, target_url=url_obj.target_url)
@@ -23,7 +24,7 @@ async def create_short_url(
 async def redirect_to_target(
     short_id: str,
     session: AsyncSession = Depends(get_session),
-    service: URLService = Depends(URLService)
+    service: URLService = Depends(get_url_service)
 ):
     target_url = await service.resolve_short_url(session, short_id)
 

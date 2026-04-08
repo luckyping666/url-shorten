@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_session
-from schemas.url import URLStats
-from services.url_service import URLService
+from app.core.database import get_session
+from app.core.deps import get_url_service
+from app.schemas.url_schema import URLStats
+from app.services.url_service import URLService
 
 router = APIRouter()
 
@@ -12,7 +13,7 @@ router = APIRouter()
 async def get_stats(
     short_id: str,
     session: AsyncSession = Depends(get_session),
-    service: URLService = Depends(URLService)
+    service: URLService = Depends(get_url_service)
 ):
     clicks = await service.get_stats(session, short_id)
 

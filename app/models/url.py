@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Integer, DateTime, func
-from core.database import Base
+from app.core.database import Base
 
 
 class URL(Base):

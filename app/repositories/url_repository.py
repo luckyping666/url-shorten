@@ -1,6 +1,6 @@
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from models.url import URL
+from app.models.url import URL
 
 
 class URLRepository:

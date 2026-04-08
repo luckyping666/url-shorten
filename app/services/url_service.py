@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from repositories.url_repository import URLRepository
-from utils.short_id import generate_short_id
-from models.url import URL
+from app.repositories.url_repository import URLRepository
+from app.utils.short_id import generate_short_id
+from app.models.url import URL
 
 
 class URLService:
@@ -15,6 +15,7 @@ class URLService:
         session: AsyncSession,
         target_url: str
     ) -> URL:
+    
         """Generate a short ID and save the URL."""
         short_id = generate_short_id()
 
@@ -24,11 +25,13 @@ class URLService:
             short_id = generate_short_id()
             existing = await self.repository.get_by_short_id(session, short_id)
 
+        # ВАЖНО: приводим HttpUrl → str
         return await self.repository.create(
             session=session,
             short_id=short_id,
-            target_url=target_url
+            target_url=str(target_url)
         )
+
 
     async def resolve_short_url(
         self,
